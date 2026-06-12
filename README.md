@@ -35,10 +35,10 @@ pip install -r requirements.txt
 ```
 
 3. **准备数据**
-确保以下数据文件存在：
-- `F:\软件安装\WorkBuddy项目储存\2026-05-31-task-29\wechat-decrypt\export\contacts.json`
-- `F:\软件安装\WorkBuddy项目储存\2026-05-31-task-29\wechat-decrypt\export\faq_knowledge_base.json`
-- `F:\软件安装\WorkBuddy项目储存\2026-05-31-task-29\wechat-decrypt\export\statistics.json`
+将数据文件放入 `data/` 目录，或修改 `app/main.py` 中的数据路径配置：
+- `contacts.json` - 联系人数据
+- `faq_knowledge_base.json` - FAQ知识库
+- `statistics.json` - 统计数据
 
 4. **启动服务**
 ```bash
