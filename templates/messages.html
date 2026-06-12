@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}聊天记录 - 微信AI知识管理平台{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-chat me-2"></i>聊天记录
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <select class="form-select" id="contactFilter">
+                            <option value="">所有联系人</option>
+                            {% for contact in contacts[:100] %}
+                            <option value="{{ contact.id }}" {% if selected_contact == contact.id %}selected{% endif %}>
+                                {{ contact.nick_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" class="form-control" id="searchInput" placeholder="搜索消息...">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chat-container" style="max-height: 600px; overflow-y: auto;">
+                    {% for message in messages %}
+                    <div class="message-bubble {% if message.is_from_me %}sent{% else %}received{% endif %} mb-3">
+                        <div class="message-content p-3 rounded">
+                            <div class="message-sender small text-muted mb-1">
+                                {% if message.is_from_me %}
+                                <strong>我</strong>
+                                {% else %}
+                                <strong>{{ message.sender_name or '未知' }}</strong>
+                                {% endif %}
+                            </div>
+                            <div class="message-text">{{ message.content }}</div>
+                            <div class="message-time text-muted small mt-1">
+                                {{ message.send_time }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.message-bubble {
+    max-width: 80%;
+}
+
+.message-bubble.sent {
+    margin-left: auto;
+}
+
+.message-bubble.sent .message-content {
+    background-color: #007bff;
+    color: white;
+}
+
+.message-bubble.received .message-content {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.message-time {
+    font-size: 0.75rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // 联系人筛选
+    $('#contactFilter').on('change', function() {
+        var contactId = this.value;
+        if (contactId) {
+            window.location.href = '/messages?contact_id=' + contactId;
+        } else {
+            window.location.href = '/messages';
+        }
+    });
+    
+    // 搜索功能
+    $('#searchInput').on('keyup', function() {
+        var searchText = this.value.toLowerCase();
+        $('.message-bubble').each(function() {
+            var text = $(this).text().toLowerCase();
+            if (text.includes(searchText)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

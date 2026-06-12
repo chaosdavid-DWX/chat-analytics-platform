@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 微信AI知识管理平台{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- 统计卡片 -->
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">联系人总数</h6>
+                        <h2 class="mb-0 mt-2">{{ total_contacts }}</h2>
+                    </div>
+                    <div class="display-6">
+                        <i class="bi bi-people"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="/contacts" class="text-white">查看详情 <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">消息总数</h6>
+                        <h2 class="mb-0 mt-2">{{ total_messages }}</h2>
+                    </div>
+                    <div class="display-6">
+                        <i class="bi bi-chat"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="/messages" class="text-white">查看详情 <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-dark h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">FAQ知识库</h6>
+                        <h2 class="mb-0 mt-2">{{ total_faq }}</h2>
+                    </div>
+                    <div class="display-6">
+                        <i class="bi bi-question-circle"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="/faq" class="text-dark">查看详情 <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">AI分析</h6>
+                        <h2 class="mb-0 mt-2">可用</h2>
+                    </div>
+                    <div class="display-6">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="/analysis" class="text-white">查看详情 <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 活跃联系人 -->
+    <div class="col-md-8 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-people-fill me-2"></i>活跃联系人 Top 10
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>昵称</th>
+                                <th>备注</th>
+                                <th>消息数</th>
+                                <th>最后活跃</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contact in active_contacts %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">{{ loop.index }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ contact.nick_name }}</strong>
+                                    {% if contact.brand %}
+                                    <span class="badge bg-secondary ms-1">{{ contact.brand }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ contact.remark or '-' }}</td>
+                                <td>
+                                    <span class="badge bg-success">{{ contact.message_count or 0 }}</span>
+                                </td>
+                                <td>{{ contact.last_active or '-' }}</td>
+                                <td>
+                                    <a href="/contacts/{{ contact.id }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <a href="/contacts" class="btn btn-primary">查看所有联系人</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 快速操作 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning me-2"></i>快速操作
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a href="/contacts" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-people me-2"></i>查看联系人
+                    </a>
+                    <a href="/messages" class="btn btn-outline-success btn-lg">
+                        <i class="bi bi-chat me-2"></i>查看聊天记录
+                    </a>
+                    <a href="/faq" class="btn btn-outline-warning btn-lg">
+                        <i class="bi bi-question-circle me-2"></i>FAQ知识库
+                    </a>
+                    <a href="/analysis" class="btn btn-outline-info btn-lg">
+                        <i class="bi bi-graph-up me-2"></i>数据分析
+                    </a>
+                </div>
+                
+                <hr>
+                
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="bi bi-info-circle me-2"></i>系统信息
+                        </h6>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <strong>数据更新：</strong>
+                                <span class="text-success">实时</span>
+                            </li>
+                            <li class="mb-2">
+                                <strong>AI引擎：</strong>
+                                <span class="text-success">已就绪</span>
+                            </li>
+                            <li class="mb-2">
+                                <strong>知识库：</strong>
+                                <span class="text-success">{{ total_faq }} 条FAQ</span>
+                            </li>
+                            <li>
+                                <strong>版本：</strong>
+                                <span class="text-muted">v0.1.0</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 图表区域 -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-bar-chart me-2"></i>消息分布（按小时）
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="messageDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pie-chart me-2"></i>品牌分布
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="brandDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 消息分布图表
+const messageCtx = document.getElementById('messageDistributionChart').getContext('2d');
+const messageChart = new Chart(messageCtx, {
+    type: 'bar',
+    data: {
+        labels: ['0-3时', '3-6时', '6-9时', '9-12时', '12-15时', '15-18时', '18-21时', '21-24时'],
+        datasets: [{
+            label: '消息数量',
+            data: [120, 80, 350, 580, 620, 750, 680, 420],
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// 品牌分布图表
+const brandCtx = document.getElementById('brandDistributionChart').getContext('2d');
+const brandChart = new Chart(brandCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['索菲亚', '箭牌', '欧派', '其他'],
+        datasets: [{
+            data: [807, 165, 14, 8602],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

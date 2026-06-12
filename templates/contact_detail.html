@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}{{ contact.nick_name }} - 联系人详情{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- 联系人信息 -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-person me-2"></i>联系人信息
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="avatar-circle mx-auto mb-3">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h4>{{ contact.nick_name }}</h4>
+                    {% if contact.remark %}
+                    <p class="text-muted">备注：{{ contact.remark }}</p>
+                    {% endif %}
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <strong><i class="bi bi-hash me-2"></i>ID：</strong>
+                        <span>{{ contact.id }}</span>
+                    </li>
+                    <li class="mb-3">
+                        <strong><i class="bi bi-person me-2"></i>用户名：</strong>
+                        <span>{{ contact.username }}</span>
+                    </li>
+                    <li class="mb-3">
+                        <strong><i class="bi bi-tag me-2"></i>类型：</strong>
+                        {% if contact.type == 'friend' %}
+                        <span class="badge bg-primary">好友</span>
+                        {% elif contact.type == 'group' %}
+                        <span class="badge bg-info">群组</span>
+                        {% elif contact.type == 'official' %}
+                        <span class="badge bg-warning">公众号</span>
+                        {% else %}
+                        <span class="badge bg-secondary">{{ contact.type }}</span>
+                        {% endif %}
+                    </li>
+                    {% if contact.brand %}
+                    <li class="mb-3">
+                        <strong><i class="bi bi-building me-2"></i>品牌：</strong>
+                        <span class="badge bg-success">{{ contact.brand }}</span>
+                    </li>
+                    {% endif %}
+                    <li class="mb-3">
+                        <strong><i class="bi bi-chat me-2"></i>消息数：</strong>
+                        <span class="badge bg-success">{{ contact.message_count or 0 }}</span>
+                    </li>
+                    <li class="mb-3">
+                        <strong><i class="bi bi-clock me-2"></i>最后活跃：</strong>
+                        <span>{{ contact.last_active or '-' }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 聊天记录 -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-chat me-2"></i>最近聊天记录
+                    </h5>
+                    <a href="/messages?contact_id={{ contact.id }}" class="btn btn-outline-primary btn-sm">
+                        查看全部
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chat-container" style="max-height: 500px; overflow-y: auto;">
+                    {% for message in messages[:50] %}
+                    <div class="message-bubble {% if message.is_from_me %}sent{% else %}received{% endif %} mb-3">
+                        <div class="message-content p-3 rounded">
+                            <div class="message-text">{{ message.content }}</div>
+                            <div class="message-time text-muted small mt-1">
+                                {{ message.send_time }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #6c757d;
+}
+
+.message-bubble {
+    max-width: 80%;
+}
+
+.message-bubble.sent {
+    margin-left: auto;
+}
+
+.message-bubble.sent .message-content {
+    background-color: #007bff;
+    color: white;
+}
+
+.message-bubble.received .message-content {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.message-time {
+    font-size: 0.75rem;
+}
+</style>
+{% endblock %}

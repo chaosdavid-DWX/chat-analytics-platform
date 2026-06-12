@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ知识库 - 微信AI知识管理平台{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-question-circle me-2"></i>FAQ知识库
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">所有类别</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" class="form-control" id="searchInput" placeholder="搜索FAQ...">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="faqTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>问题</th>
+                                <th>答案</th>
+                                <th>类别</th>
+                                <th>频率</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in faq_items[:100] %}
+                            <tr>
+                                <td>
+                                    <strong>{{ item.question }}</strong>
+                                </td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 300px;">
+                                        {{ item.answer }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if item.categories %}
+                                        {% for cat in item.categories %}
+                                        <span class="badge bg-info me-1">{{ cat }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">{{ item.frequency or 0 }}</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                            data-question="{{ item.question }}" 
+                                            data-answer="{{ item.answer }}">
+                                        <i class="bi bi-clipboard"></i> 复制
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // 初始化DataTables
+    var table = $('#faqTable').DataTable({
+        language: {
+            search: "搜索：",
+            lengthMenu: "每页显示 _MENU_ 条",
+            info: "显示第 _START_ 至 _END_ 条，共 _TOTAL_ 条",
+            paginate: {
+                first: "首页",
+                last: "末页",
+                previous: "上一页",
+                next: "下一页"
+            }
+        },
+        pageLength: 25
+    });
+    
+    // 搜索功能
+    $('#searchInput').on('keyup', function() {
+        table.search(this.value).draw();
+    });
+    
+    // 类别筛选
+    $('#categoryFilter').on('change', function() {
+        table.column(2).search(this.value).draw();
+    });
+    
+    // 复制功能
+    $('.copy-btn').on('click', function() {
+        var question = $(this).data('question');
+        var answer = $(this).data('answer');
+        var text = '问题：' + question + '\n答案：' + answer;
+        
+        navigator.clipboard.writeText(text).then(function() {
+            alert('已复制到剪贴板！');
+        });
+    });
+});
+</script>
+{% endblock %}

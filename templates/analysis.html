@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}数据分析 - 微信AI知识管理平台{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- 意图识别 -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-search me-2"></i>意图识别
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="intentInput" class="form-label">输入客户消息</label>
+                    <textarea class="form-control" id="intentInput" rows="3" 
+                              placeholder="例如：你们这个衣柜多少钱？"></textarea>
+                </div>
+                <button class="btn btn-primary" id="analyzeIntent">
+                    <i class="bi bi-robot me-2"></i>分析意图
+                </button>
+                <div id="intentResult" class="mt-3" style="display: none;">
+                    <div class="alert alert-info">
+                        <strong>识别结果：</strong>
+                        <span id="intentText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 成交信号检测 -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-check-circle me-2"></i>成交信号检测
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="signalInput" class="form-label">输入对话内容</label>
+                    <textarea class="form-control" id="signalInput" rows="3" 
+                              placeholder="例如：好的，我考虑一下，明天给你答复"></textarea>
+                </div>
+                <button class="btn btn-success" id="detectSignal">
+                    <i class="bi bi-robot me-2"></i>检测信号
+                </button>
+                <div id="signalResult" class="mt-3" style="display: none;">
+                    <div class="alert alert-success">
+                        <strong>检测结果：</strong>
+                        <span id="signalText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- FAQ匹配 -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightbulb me-2"></i>FAQ匹配
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="faqInput" class="form-label">输入客户问题</label>
+                    <textarea class="form-control" id="faqInput" rows="3" 
+                              placeholder="例如：你们的售后服务怎么样？"></textarea>
+                </div>
+                <button class="btn btn-warning" id="matchFaq">
+                    <i class="bi bi-robot me-2"></i>匹配FAQ
+                </button>
+                <div id="faqResult" class="mt-3" style="display: none;">
+                    <div class="alert alert-warning">
+                        <strong>推荐回答：</strong>
+                        <span id="faqText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 情感分析 -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-emoji-smile me-2"></i>情感分析
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="sentimentInput" class="form-label">输入文本</label>
+                    <textarea class="form-control" id="sentimentInput" rows="3" 
+                              placeholder="例如：这个价格太贵了，能不能便宜点？"></textarea>
+                </div>
+                <button class="btn btn-info" id="analyzeSentiment">
+                    <i class="bi bi-robot me-2"></i>分析情感
+                </button>
+                <div id="sentimentResult" class="mt-3" style="display: none;">
+                    <div class="alert alert-info">
+                        <strong>情感分析：</strong>
+                        <span id="sentimentText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 客户分群 -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-people me-2"></i>客户分群分析
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h6>高价值客户</h6>
+                                <h2>1,234</h2>
+                                <small>消息数 > 100</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h6>活跃客户</h6>
+                                <h2>5,678</h2>
+                                <small>最近30天活跃</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-warning text-dark">
+                            <div class="card-body text-center">
+                                <h6>潜在客户</h6>
+                                <h2>8,901</h2>
+                                <small>有咨询记录</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h6>流失客户</h6>
+                                <h2>2,345</h2>
+                                <small>90天未活跃</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // 意图识别
+    $('#analyzeIntent').on('click', function() {
+        var text = $('#intentInput').val();
+        if (text) {
+            // 模拟AI分析
+            var intents = ['询问价格', '了解产品', '预约看房', '售后服务', '投诉建议'];
+            var intent = intents[Math.floor(Math.random() * intents.length)];
+            $('#intentText').text(intent);
+            $('#intentResult').show();
+        }
+    });
+    
+    // 成交信号检测
+    $('#detectSignal').on('click', function() {
+        var text = $('#signalInput').val();
+        if (text) {
+            // 模拟AI分析
+            var signals = ['高成交意向', '中等意向', '低意向', '需要跟进', '已流失'];
+            var signal = signals[Math.floor(Math.random() * signals.length)];
+            $('#signalText').text(signal);
+            $('#signalResult').show();
+        }
+    });
+    
+    // FAQ匹配
+    $('#matchFaq').on('click', function() {
+        var text = $('#faqInput').val();
+        if (text) {
+            // 模拟AI分析
+            var answers = [
+                '我们提供5年质保，终身维护服务。',
+                '价格根据材质和尺寸不同，从299元/平方起。',
+                '可以预约免费上门量尺，3天内出设计方案。',
+                '我们有专业的售后团队，24小时响应。'
+            ];
+            var answer = answers[Math.floor(Math.random() * answers.length)];
+            $('#faqText').text(answer);
+            $('#faqResult').show();
+        }
+    });
+    
+    // 情感分析
+    $('#analyzeSentiment').on('click', function() {
+        var text = $('#sentimentInput').val();
+        if (text) {
+            // 模拟AI分析
+            var sentiments = ['积极', '中性', '消极', '愤怒', '满意'];
+            var sentiment = sentiments[Math.floor(Math.random() * sentiments.length)];
+            $('#sentimentText').text(sentiment);
+            $('#sentimentResult').show();
+        }
+    });
+});
+</script>
+{% endblock %}
