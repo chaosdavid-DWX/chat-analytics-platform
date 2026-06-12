@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-微信AI知识管理平台 - 启动脚本
+聊天数据分析平台 - 启动脚本
 """
 
 import uvicorn

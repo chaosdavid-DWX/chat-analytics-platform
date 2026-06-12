@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-微信AI知识管理平台 - 主程序
+聊天数据分析平台 - 主程序
 基于FastAPI框架
 """
 
@@ -23,8 +23,8 @@ EXPORT_DIR = Path(r"F:\软件安装\WorkBuddy项目储存\2026-05-31-task-29\wec
 
 # 创建FastAPI应用
 app = FastAPI(
-    title="微信AI知识管理平台",
-    description="实时读取微信聊天记录、自动脱敏、AI分析销冠话术、知识沉淀",
+    title="聊天数据分析平台",
+    description="实时读取聊天记录、自动脱敏、AI分析销冠话术、知识沉淀",
     version="0.1.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
